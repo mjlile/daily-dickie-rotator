@@ -12,6 +12,6 @@ This Lambda code rotates videos in an s3 bucket. These videos are displayed on d
 }
 ```
 
-- `srcPrefix` - the prefix in the s3 bucket under which the candidate objects live.
-- `targetKey` - the key that candidate will be copied to. Does not include `srcPrefix`.
-- `preview` - if true, preview the operation but do not update anything in s3.
+- `srcPrefix` - [Required] the prefix in the s3 bucket under which the candidate objects live.
+- `targetKey` - [Required] the key that candidate will be copied to. Does not include `srcPrefix`.
+- `preview` - [Optional] if "true", preview the operation but do not update anything in s3. Defaults to false.
