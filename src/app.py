@@ -66,6 +66,11 @@ def lambda_handler(event, context):
     candidate = get_candidate(bucket, src_prefix)
     last_shared_on = get_last_share_date(candidate)
     share_date = get_share_date()
+
+    print('candidate: ' + candidate.key)
+    print('target: ' + target_key)
+    print('last_shared_on: ' + last_shared_on)
+    print('today: ' + share_date)
     
     if not preview:
         print("preview disabled - updating...")
