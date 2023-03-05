@@ -16,12 +16,10 @@ cf_client = boto3.client('cloudfront')
 # Get the date the video was last shared on from the metadata.
 # Returns "0000-00-00" if there is no metadata
 def get_last_share_date_internal(obj_summaries):
+    DEFAULT_DATE = "0000-00-00" 
     obj = obj_summaries.Object()
     
-    if SHARED_ON_METADATA_KEY not in obj.metadata:
-        return "0000-00-00"
-        
-    return obj.metadata[SHARED_ON_METADATA_KEY]
+    return obj.metadata.get(SHARED_ON_METADATA_KEY, DEFAULT_DATE)
     
 # Get the last share data and print logs
 def get_last_share_date(obj_summaries):
