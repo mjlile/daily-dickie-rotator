@@ -3,10 +3,15 @@ import json
 from datetime import datetime
 
 SHARED_ON_METADATA_KEY = 'shared-on'
+
+# TODO: move to input
 BUCKET_NAME = 'dickie-videos'
+CF_DISTRIBUTION_ID = 'E1ZT8VLRNTX3RT'
 
 s3 = boto3.resource('s3')
 bucket = s3.Bucket(BUCKET_NAME)
+
+cf_client = boto3.client('cloudfront')
 
 # Get the date the video was last shared on from the metadata.
 # Returns "0000-00-00" if there is no metadata
@@ -42,6 +47,21 @@ def update_target(candidate_key, target_key):
 
     obj = bucket.Object(target_key)
     obj.copy(copy_source)
+
+    # Invalidate the CloudFront cache to start serving the new target right away.
+    # Otherwise, the default TTL is 24 hours
+    cf_client.create_invalidation(
+        DistributionId=CF_DISTRIBUTION_ID,
+        InvalidationBatch={
+            'Paths': {
+                'Quantity': 1,
+                'Items': [
+                    '/' + target_key,
+                ]
+            },
+            'CallerReference': candidate_key
+        }
+    )
 
     return
 
